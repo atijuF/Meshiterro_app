@@ -1,10 +1,10 @@
 class ListsController < ApplicationController
   def new
-    @list = list.new
+    @list = List.new(list_params)
   end
   
   def create
-    @list = list.new(list_params)
+    @list = List.new(list_params)
     if @list.save
       flash[:notice] = "投稿に成功しました。"
       redirect_to list_path(@list.id)
@@ -12,34 +12,35 @@ class ListsController < ApplicationController
       flash.now[:alert] = "投稿に失敗しました。"
       render :new
     end
+    @list.user_id = current_user.id
   end
 
   def index
-    @lists = list.all
+    @lists = List.all
   end
 
   def show
-    @list = list.find(params[:id])  
+    @list = List.find(params[:id])  
   end
 
   def edit
-    @list = list.find(params[:id])
+    @list = List.find(params[:id])
   end
   
   def update
-    list = list.find(params[:id])
+    list = List.find(params[:id])
     list.update(list_params)
     redirect_to list_path(list.id)  
   end
   
   def destroy
-    list = list.find(params[:id]) 
+    list = List.find(params[:id]) 
     list.destroy
     redirect_to '/lists'
   end
   
   private
   def list_params
-    params.require(:list).permit(:title, :body, :image)
+    params.require(:list).permit(:shop_name, :image, :caption)
   end
 end
