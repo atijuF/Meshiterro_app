@@ -2,10 +2,43 @@
   <%= image_tag @list.get_image %>
   <p>ショップ名：<%= @list.shop_name %></p>
   <p>説明：<%= @list.caption %></p>
-  <p>投稿ユーザー画像：<%= image_tag 'sample-author1.jpg' %></p>
+  <p>投稿ユーザー画像：<%= image_tag @list.user.get_profile_image(100,100) %></p>
   <p>ユーザーネーム：<%= @list.user.name %></p>
   <p>投稿日：<%= @list.created_at.strftime('%Y/%m/%d') %></p>
   <% if @list.user == current_user %>
     <%= link_to "削除", list_path(@list), method: :delete %>
   <% end %>
+  <% if @list.favorited_by?(current_user) %>
+    <p>
+      <%= link_to list_favorite_path(@list), method: :delete do %>
+        ♥<%= @list.favorites.count %> いいね
+      <% end %>
+    </p>
+    <% else %>
+    <p>
+      <%= link_to list_favorite_path(@list), method: :post do %>
+        ♡<%= @list.favorites.count %> いいね
+      <% end %>
+    </p>
+  <% end %>
+</div>
+
+<div>
+  <p>コメント件数:<%= @list.post_comments.count %></p>
+  <% @list.post_comments.each do |post_comment| %>
+    <p><%= image_tag post_comment.user.get_profile_image(100,100) %></p>
+    <%= post_comment.user.name %>
+    <%= post_comment.created_at.strftime('%Y/%m/%d') %><%= post_comment.comment %>
+     <% if post_comment.user == current_user %>
+      <%= link_to "削除", link_post_comment_path(post_comment.list, post_comment), method: :delete %>
+    <% end %>
+  <% end %>
+</div>
+<div>
+  <%= form_with model: [@list, @post_comment] do |f| %>
+    <%= f.text_area :comment, rows: '5', placeholder: "コメントをここに" %>
+    <%= f.submit "送信する" %>
+  <% end %>
+</div>
+  
 </div>
