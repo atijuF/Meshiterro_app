@@ -5,6 +5,7 @@ class ListsController < ApplicationController
   
   def create
     @list = List.new(list_params)
+    @list.user_id = current_user.id
     if @list.save
       flash[:notice] = "投稿に成功しました。"
       redirect_to list_path(@list.id)
@@ -16,7 +17,7 @@ class ListsController < ApplicationController
   end
 
   def index
-    @lists = List.all
+    @lists = List.page(params[:page])
   end
 
   def show

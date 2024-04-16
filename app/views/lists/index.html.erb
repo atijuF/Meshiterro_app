@@ -1,15 +1,2 @@
 <h1>投稿一覧</h1>
-<% @lists.each do |list| %>
-
-  <div>
-    <%= link_to list_path(list.id) do %>
-      <%= image_tag list.get_image %>
-    <% end %>
-    <p>投稿ユーザー画像：<%= image_tag list.user.get_profile_image(100,100) %></p>
-    <p>ショップ名：<%= list.shop_name %></p>
-    <p>説明：<%= list.caption %></p>
-    <p>ユーザーネーム：<%= list.user.name %></p>
-    <p><%= link_to "#{list.post_comments.count} コメント", list_path(list.id) %></p>
-  </div>
-  
-<% end %>
+<%= render 'post_image', lists: @lists %>
